@@ -1,0 +1,217 @@
+{% schema %}
+{
+  "name": "Full Page Slideshow",
+  "settings": [
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "info": "Defined in pixels. Do not add the 'px' unit."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slideshow",
+      "name": "Slideshow Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "backgroud_slide",
+          "label": "Slide Background Image",
+          "info": "Recommended dimensions: 1881 x 1080px"
+        },
+        {
+          "type": "select",
+          "id": "select_pos",
+          "label": "Content Position",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "text",
+          "id": "block_title",
+          "label": "Slide Title",
+          "default": "Your Slide Title"
+        },
+        {
+          "type": "color",
+          "id": "color_title",
+          "label": "Slide Title Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "bg_title",
+          "label": "Slide Title Background",
+          "default": "#000000"
+        },
+        {
+          "type": "text",
+          "id": "block_buton",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "color",
+          "id": "color_block_button",
+          "label": "Button Text Color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "bg_btn",
+          "label": "Button Background Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "url",
+          "id": "block_url",
+          "label": "Button URL",
+          "default": "/collections/all"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full Page Slideshow",
+      "category": "Home",
+      "blocks": [
+        { "type": "slideshow", "settings": {} },
+        { "type": "slideshow", "settings": {} },
+        { "type": "slideshow", "settings": {} }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<div data-section-id="{{ section.id }}" data-section-type="section-slideshow-v3">
+  <div class="section-slideshow-v3">
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'slideshow' %}
+          <div
+            class="itemv-slide-h3"
+            style="background-image: url({{ block.settings.backgroud_slide | img_url: 'master' }});"
+          >
+            <div class="container container-v2">
+              <div class="content {% if block.settings.select_pos == 'left' %}text-left{% elsif block.settings.select_pos == 'center' %}text-center{% elsif block.settings.select_pos == 'right' %}text-right{% endif %}">
+                {% if block.settings.block_title %}
+                  <h3 class="mb-0 title-slideshow" style="color: {{ block.settings.color_title }};">
+                    <span class="title" style="background: {{ block.settings.bg_title }};">
+                      {{- block.settings.block_title -}}
+                    </span>
+                  </h3>
+                {% endif %}
+                {% if block.settings.block_buton %}
+                  <div class="box-button">
+                    <a
+                      href="{{ block.settings.block_url }}"
+                      class="button-shop"
+                      style="color: {{ block.settings.color_block_button }}; background: {{ block.settings.bg_btn }};"
+                    >
+                      {{ block.settings.block_buton }}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* General container styling */
+  .section-slideshow-v3 {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .itemv-slide-h3 {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;  /* This is the key for the "fixed" background effect */
+  }
+
+  .container-v2 {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .content {
+    color: white;
+    text-align: center;
+  }
+
+  .text-left {
+    text-align: left;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  /* Heading styling */
+  .title-slideshow {
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 10px;
+    display: inline-block;
+  }
+
+  /* Button styling */
+  .box-button .button-shop {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .box-button .button-shop:hover {
+    border-color: currentColor;
+  }
+</style>
+
+<script>
+  document.querySelector('.section-slideshow-v3').addEventListener('wheel', function(event) {
+    if (event.deltaY > 0) {
+        this.scrollBy({ top: window.innerHeight, left: 0, behavior: 'smooth' });
+    } else {
+        this.scrollBy({ top: -window.innerHeight, left: 0, behavior: 'smooth' });
+    }
+  });
+</script>
